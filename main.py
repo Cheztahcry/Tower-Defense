@@ -35,7 +35,7 @@ def create_turret(mouse_pos):
     turret_group.add(turret)
 
 #Map
-world_surf = pygame.image.load('levels/map1.1.png').convert_alpha()
+world_surf = pygame.image.load('levels/map.png').convert_alpha()
 world = World(world_data, world_surf)
 world.process_data()
 world.process_enemies()

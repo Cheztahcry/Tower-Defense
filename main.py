@@ -2,6 +2,7 @@ import pygame
 import json
 from enemy import Enemy
 from world import World
+from turret import Turret
 import constants as const
 
 pygame.init() 
@@ -20,13 +21,21 @@ last_enemy_spawn = pygame.time.get_ticks()
 
 #Load Images
 
+cursor_turret = pygame.image.load("assets/turrets/cursor_turret.png").convert_alpha()
+
 
 #json
 with open('levels/waypoints.tmj') as file:
     world_data = json.load(file)
 
+def create_turret(mouse_pos):
+    mouse_tile_x = mouse_pos[0] // const.TILE_SIZE
+    mouse_tile_y = mouse_pos[1] // const.TILE_SIZE
+    turret = Turret(cursor_turret, mouse_tile_x, mouse_tile_y)
+    turret_group.add(turret)
+
 #Map
-world_surf = pygame.image.load('levels/map.png').convert_alpha()
+world_surf = pygame.image.load('levels/map1.1.png').convert_alpha()
 world = World(world_data, world_surf)
 world.process_data()
 world.process_enemies()
@@ -42,6 +51,7 @@ enemy_images = {
 
 }
 enemy_group = pygame.sprite.Group()
+turret_group = pygame.sprite.Group()
 
 print(world.waypoints)
 
@@ -54,8 +64,9 @@ while game_active:
     game_window.fill("White")
     world.draw(game_window)
 
-    #Enemies
+    #Draw
     enemy_group.draw(game_window)
+    turret_group.draw(game_window)
 
     #update group
     enemy_group.update()
@@ -76,6 +87,12 @@ while game_active:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_active = False
+
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button ==  1:
+            mouse_pos = pygame.mouse.get_pos()
+            if mouse_pos[0] < const.SCREEN_WIDTH and mouse_pos[1] < const.SCREEN_HEIGHT:
+                create_turret(mouse_pos)
+                
 
 
 

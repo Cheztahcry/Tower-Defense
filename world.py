@@ -5,6 +5,7 @@ class World():
     def __init__(self, data, image):
         pygame.sprite.Sprite.__init__(self)
         self.level = 1
+        self.tile_map = []
         self.waypoints = []
         self.level_data = data
         self.image = image
@@ -13,7 +14,11 @@ class World():
 
     def process_data(self):
         for layer in self.level_data["layers"]:
-            if layer["name"] == "waypoints":
+            if layer["name"] == "Tile Layer 1":
+                self.tile_map = layer["data"]
+                print(self.tile_map)
+
+            elif layer["name"] == "waypoints":
                 for obj in layer["objects"]:
                     waypoint_data = obj["polyline"]
                     self.process_waypoints(waypoint_data)

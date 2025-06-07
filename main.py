@@ -31,8 +31,16 @@ with open('levels/waypoints.tmj') as file:
 def create_turret(mouse_pos):
     mouse_tile_x = mouse_pos[0] // const.TILE_SIZE
     mouse_tile_y = mouse_pos[1] // const.TILE_SIZE
-    turret = Turret(cursor_turret, mouse_tile_x, mouse_tile_y)
-    turret_group.add(turret)
+    mouse_tile_num = (mouse_tile_y * const.COLUMS) + mouse_tile_x
+    if world.tile_map[mouse_tile_num] == 121:
+        space_is_free = True
+        for turret in turret_group:
+            if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
+                space_is_free = False
+
+        if space_is_free == True:
+            new_turret = Turret(cursor_turret, mouse_tile_x, mouse_tile_y)
+            turret_group.add(new_turret)
 
 #Map
 world_surf = pygame.image.load('levels/map.png').convert_alpha()

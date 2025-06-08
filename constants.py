@@ -7,6 +7,9 @@ SCREEN_WIDTH = TILE_SIZE * ROWS
 FPS = 60
 
 
-
-#enemy constants
+# enemy constants
 SPAWN_COOLDOWN = 400
+
+# turret
+ANIMATION_STEPS = 8
+ANIMATION_DELAY = 15

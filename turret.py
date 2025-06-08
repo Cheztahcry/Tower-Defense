@@ -1,12 +1,16 @@
 import pygame
+import math
 import constants as const
 
 
 class Turret(pygame.sprite.Sprite):
     def __init__(self, sprite_sheet, tile_x, tile_y):
         pygame.sprite.Sprite.__init__(self)
+        self.range = 90
         self.cooldown = 1000
         self.last_shot = pygame.time.get_ticks()
+        self.selected = False
+        self.target = None
 
         self.tile_x = tile_x
         self.tile_y = tile_y
@@ -21,10 +25,20 @@ class Turret(pygame.sprite.Sprite):
         self.update_time = pygame.time.get_ticks()
 
         # update image
-
-        self.image = self.animation_list[self.frame_index]
+        self.angle = 90
+        self.original_image = self.animation_list[self.frame_index]
+        self.image = pygame.transform.rotate(self.original_image, self.angle)
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
+
+        #transparent circle range
+        self.range_image = pygame.Surface((self.range * 2, self.range * 2))
+        self.range_image.fill((0, 0, 0))
+        self.range_image.set_colorkey((0, 0, 0))
+        pygame.draw.circle(self.range_image, "grey100", (self.range, self.range), self.range)
+        self.range_image.set_alpha(100)
+        self.range_rect = self.range_image.get_rect()
+        self.range_rect.center = self.rect.center
 
     def load_images(self):
         size = self.sprite_sheet.get_height()
@@ -34,13 +48,28 @@ class Turret(pygame.sprite.Sprite):
             animation_list.append(temp_img)
         return animation_list
 
-    def update(self):
-        if pygame.time.get_ticks() - self.last_shot > self.cooldown:
+    def update(self, enemy_group):
+        if self.target:
             self.play_animation()
+        else:
+            if pygame.time.get_ticks() - self.last_shot > self.cooldown:
+                
+                self.pick_target(enemy_group)
+
+    def pick_target(self, enemy_group):
+        x_dist = 0
+        y_dist = 0
+        for enemy in enemy_group:
+            x_dist = enemy.position[0] - self.x
+            y_dist = enemy.position[1] - self.y
+            dist = math.sqrt(x_dist ** 2 + y_dist ** 2)
+            if dist < self.range:
+                self.target = enemy
+                self.angle = math.degrees(math.atan2(-y_dist, x_dist))
 
     def play_animation(self):
         # update
-        self.image = self.animation_list[self.frame_index]
+        self.original_image = self.animation_list[self.frame_index]
         # check time passed
         if pygame.time.get_ticks() - self.update_time > const.ANIMATION_DELAY:
             self.update_time = pygame.time.get_ticks()
@@ -49,3 +78,12 @@ class Turret(pygame.sprite.Sprite):
             if self.frame_index >= len(self.animation_list):
                 self.frame_index = 0
                 self.last_shot = pygame.time.get_ticks()
+                self.target = None
+
+    def draw(self, surface):
+        self.image = pygame.transform.rotate(self.original_image, self.angle - 90)
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.x, self.y)
+        surface.blit(self.image, self.rect)
+        if self.selected:
+            surface.blit(self.range_image, self.range_rect)

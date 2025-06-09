@@ -31,6 +31,7 @@ for x in range(1, const.TURRET_LEVEL + 1):
 cursor_turret = pygame.image.load(
     "assets/turrets/cursor_turret.png").convert_alpha()
 
+<<<<<<< Updated upstream
 # buttons
 buy_turret_image = pygame.image.load(
     "assets/buttons/buy_button.png").convert_alpha()
@@ -38,6 +39,11 @@ cancel_turret_image = pygame.image.load(
     "assets/buttons/cancel_button.png").convert_alpha()
 upgrade_turret_image = pygame.image.load(
     "assets/buttons/upgrade_button.png").convert_alpha()
+=======
+#buttons
+buy_turret_image = pygame.image.load("assets/buttons/BUY.png").convert_alpha()
+cancel_turret_image = pygame.image.load("assets/buttons/CANCEL.png").convert_alpha()
+>>>>>>> Stashed changes
 
 
 # json

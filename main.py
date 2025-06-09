@@ -6,6 +6,7 @@ from turret import Turret
 import constants as const
 from button import Button
 
+
 pygame.init()
 
 
@@ -16,20 +17,27 @@ game_window = pygame.display.set_mode(
 game_active = True
 last_enemy_spawn = pygame.time.get_ticks()
 
-#Variables
+# Variables
 placing_turrets = False
 selected_turret = None
 
 # Load Images
 # turret
-turret_sheet = pygame.image.load(
-    "assets/turrets/turret_1.png").convert_alpha()
+turret_spritesheets = []
+for x in range(1, const.TURRET_LEVEL + 1):
+    turret_sheet = pygame.image.load(
+        f"assets/turrets/turret_{x}.png").convert_alpha()
+    turret_spritesheets.append(turret_sheet)
 cursor_turret = pygame.image.load(
     "assets/turrets/cursor_turret.png").convert_alpha()
 
-#buttons
-buy_turret_image = pygame.image.load("assets/buttons/buy_button.png").convert_alpha()
-cancel_turret_image = pygame.image.load("assets/buttons/cancel_button.png").convert_alpha()
+# buttons
+buy_turret_image = pygame.image.load(
+    "assets/buttons/buy_button.png").convert_alpha()
+cancel_turret_image = pygame.image.load(
+    "assets/buttons/cancel_button.png").convert_alpha()
+upgrade_turret_image = pygame.image.load(
+    "assets/buttons/upgrade_button.png").convert_alpha()
 
 
 # json
@@ -48,8 +56,10 @@ def create_turret(mouse_pos):
                 space_is_free = False
 
         if space_is_free == True:
-            new_turret = Turret(turret_sheet, mouse_tile_x, mouse_tile_y)
+            new_turret = Turret(turret_spritesheets,
+                                mouse_tile_x, mouse_tile_y)
             turret_group.add(new_turret)
+
 
 def select_turret(mouse_pos):
     mouse_tile_x = mouse_pos[0] // const.TILE_SIZE
@@ -57,7 +67,8 @@ def select_turret(mouse_pos):
     for turret in turret_group:
         if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
             return turret
-        
+
+
 def clear_selection():
     for turret in turret_group:
         turret.selected = False
@@ -81,11 +92,11 @@ turret_group = pygame.sprite.Group()
 
 print(world.waypoints)
 
-#button
+# button
 turret_button = Button(const.SCREEN_WIDTH + 50, 120, buy_turret_image, True)
 cancel_button = Button(const.SCREEN_WIDTH + 50, 180, cancel_turret_image, True)
-
-
+upgrade_button = Button(const.SCREEN_WIDTH + 50, 180,
+                        upgrade_turret_image, True)
 
 while game_active:
     game_clock.tick(const.FPS)
@@ -97,7 +108,7 @@ while game_active:
     for turret in turret_group:
         turret.draw(game_window)
 
-    #Draw Buttons
+    # Draw Buttons
     if turret_button.draw(game_window):
         placing_turrets = True
     if placing_turrets == True:
@@ -109,12 +120,18 @@ while game_active:
             game_window.blit(cursor_turret, cursor_rect)
         if cancel_button.draw(game_window):
             placing_turrets = False
+    # if turret selected, show button
+    if selected_turret:
+        # kung pwede pa, show mo button
+        if selected_turret.upgrade_level < const.TURRET_LEVEL:
+            if upgrade_button.draw(game_window):
+                selected_turret.upgrade()
 
     # update group
     enemy_group.update()
     turret_group.update(enemy_group)
 
-    #higlight selected turret
+    # higlight selected turret
     if selected_turret:
         selected_turret.selected = True
 

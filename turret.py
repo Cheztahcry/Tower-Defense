@@ -61,15 +61,19 @@ class Turret(pygame.sprite.Sprite):
                 self.pick_target(enemy_group)
 
     def pick_target(self, enemy_group):
-        x_dist = 0
-        y_dist = 0
-        for enemy in enemy_group:
-            x_dist = enemy.position[0] - self.x
-            y_dist = enemy.position[1] - self.y
-            dist = math.sqrt(x_dist ** 2 + y_dist ** 2)
-            if dist < self.range:
-                self.target = enemy
-                self.angle = math.degrees(math.atan2(-y_dist, x_dist))
+            x_dist = 0
+            y_dist = 0
+            for enemy in enemy_group:
+                if enemy.health > 0:
+                    x_dist = enemy.position[0] - self.x
+                    y_dist = enemy.position[1] - self.y
+                    dist = math.sqrt(x_dist ** 2 + y_dist ** 2)
+                    if dist < self.range:
+                        self.target = enemy
+                        self.angle = math.degrees(math.atan2(-y_dist, x_dist))
+                        #damage enemy
+                        self.target.health -= const.TURRET_DAMAGE
+                        break
 
     def play_animation(self):
         # update

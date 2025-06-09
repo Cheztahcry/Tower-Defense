@@ -33,16 +33,23 @@ cursor_turret = pygame.image.load(
 
 # buttons
 buy_turret_image = pygame.image.load(
-    "assets/buttons/buy_button.png").convert_alpha()
+    "assets/buttons/BUY.png").convert_alpha()
 cancel_turret_image = pygame.image.load(
-    "assets/buttons/cancel_button.png").convert_alpha()
+    "assets/buttons/CANCEL.png").convert_alpha()
 upgrade_turret_image = pygame.image.load(
-    "assets/buttons/upgrade_button.png").convert_alpha()
+    "assets/buttons/UPGRADE.png").convert_alpha()
 
 
 # json
 with open('levels/waypoints.tmj') as file:
     world_data = json.load(file)
+#display text
+text_font = pygame.font.SysFont("Consolas", 24, bold = True)
+large_font = pygame.font.SysFont("Consolas", 40)
+
+def draw_text(text, font, text_color, x, y):
+    img = font.render(text, True, text_color)
+    game_window.blit(img, (x, y))
 
 
 def create_turret(mouse_pos):
@@ -59,6 +66,7 @@ def create_turret(mouse_pos):
             new_turret = Turret(turret_spritesheets,
                                 mouse_tile_x, mouse_tile_y)
             turret_group.add(new_turret)
+            world.coins -= const.BUY_COST
 
 
 def select_turret(mouse_pos):
@@ -107,6 +115,8 @@ while game_active:
     enemy_group.draw(game_window)
     for turret in turret_group:
         turret.draw(game_window)
+    draw_text(str(world.health), text_font, 'blue', 0, 0)
+    draw_text(str(world.coins), text_font, 'blue', 0, 50)
 
     # Draw Buttons
     if turret_button.draw(game_window):
@@ -125,10 +135,12 @@ while game_active:
         # kung pwede pa, show mo button
         if selected_turret.upgrade_level < const.TURRET_LEVEL:
             if upgrade_button.draw(game_window):
-                selected_turret.upgrade()
+                if world.coins >= const.UPGRADE_COST:
+                    selected_turret.upgrade()
+                    world.coins -= const.UPGRADE_COST
 
     # update group
-    enemy_group.update()
+    enemy_group.update(world)
     turret_group.update(enemy_group)
 
     # higlight selected turret
@@ -157,7 +169,8 @@ while game_active:
                 selected_turret = None
                 clear_selection()
                 if placing_turrets == True:
-                    create_turret(mouse_pos)
+                    if world.coins >= const.BUY_COST:
+                        create_turret(mouse_pos)
                 else:
                     selected_turret = select_turret(mouse_pos)
 

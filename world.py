@@ -1,10 +1,13 @@
 import pygame
 import random
+import constants as const
 from enemy_data import ENEMY_SPAWN_DATA
 class World():
     def __init__(self, data, image):
         pygame.sprite.Sprite.__init__(self)
         self.level = 1
+        self.health = const.HEALTH
+        self.coins = const.COINS
         self.tile_map = []
         self.waypoints = []
         self.level_data = data

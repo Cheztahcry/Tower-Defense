@@ -18,6 +18,9 @@ game_active = True
 last_enemy_spawn = pygame.time.get_ticks()
 
 # Variables
+game_over = False
+game_outcome = 0 #-1 is a loss and 1 is win  
+level_started = False
 placing_turrets = False
 selected_turret = None
 
@@ -38,8 +41,24 @@ cancel_turret_image = pygame.image.load(
     "assets/buttons/CANCEL.png").convert_alpha()
 upgrade_turret_image = pygame.image.load(
     "assets/buttons/UPGRADE.png").convert_alpha()
+begin_image = pygame.image.load(
+    "assets/buttons/begin.png").convert_alpha()
+restart_image = pygame.image.load(
+    "assets/buttons/restart.png").convert_alpha()
+fast_forward_image = pygame.image.load(
+    "assets/buttons/fast_forward.png").convert_alpha()
 
-
+#gui
+coin_image = pygame.image.load(
+    "assets/gui/coin.png").convert_alpha()
+heart_image = pygame.image.load(
+    "assets/gui/heart.png").convert_alpha()
+logo_image = pygame.image.load(
+    "assets/gui/logo.png").convert_alpha()
+    
+#shot effects 
+shot_fx = pygame.mixer.Sound("assets/audio/shot.wav")
+shot_fx.set_volume(0.5)
 # json
 with open('levels/waypoints.tmj') as file:
     world_data = json.load(file)
@@ -49,7 +68,19 @@ large_font = pygame.font.SysFont("Consolas", 40)
 
 def draw_text(text, font, text_color, x, y):
     img = font.render(text, True, text_color)
-    game_window.blit(img, (x, y))
+    game_window.blit(img, (x, y)) 
+
+def display_data():
+    pygame.draw.rect(game_window, "yellow", (const.SCREEN_WIDTH, 0,const.SIDE_PANEL, const.SCREEN_HEIGHT))
+    pygame.draw.rect(game_window, "grey", (const.SCREEN_WIDTH, 0, const.SIDE_PANEL, 400), 2)
+    game_window.blit(logo_image, (const.SCREEN_WIDTH, 400))
+    #display data 
+    draw_text("LEVEL: " + str(world.level), text_font, 'blue', const.SCREEN_WIDTH + 10, 10)
+    game_window.blit(heart_image, (const.SCREEN_WIDTH + 10, 35 ))
+    draw_text(str(world.health), text_font, 'blue', const.SCREEN_WIDTH + 50, 40)
+    game_window.blit(coin_image,(const.SCREEN_WIDTH +10, 65))
+    draw_text(str(world.coins), text_font, 'blue',const.SCREEN_WIDTH + 50, 70)
+   
 
 
 def create_turret(mouse_pos):
@@ -64,7 +95,7 @@ def create_turret(mouse_pos):
 
         if space_is_free == True:
             new_turret = Turret(turret_spritesheets,
-                                mouse_tile_x, mouse_tile_y)
+                                mouse_tile_x, mouse_tile_y, shot_fx)
             turret_group.add(new_turret)
             world.coins -= const.BUY_COST
 
@@ -105,20 +136,30 @@ turret_button = Button(const.SCREEN_WIDTH + 50, 120, buy_turret_image, True)
 cancel_button = Button(const.SCREEN_WIDTH + 50, 180, cancel_turret_image, True)
 upgrade_button = Button(const.SCREEN_WIDTH + 50, 180,
                         upgrade_turret_image, True)
+begin_button = Button(const.SCREEN_WIDTH + 50, 300,
+                        begin_image, True)
+restart_button = Button(310, 300,
+                        restart_image, True)
+fast_forward_button = Button(const.SCREEN_WIDTH + 50, 300,
+                        fast_forward_image, False)
+
 
 while game_active:
     game_clock.tick(const.FPS)
-    game_window.fill("White")
     world.draw(game_window)
 
     # Draw
     enemy_group.draw(game_window)
     for turret in turret_group:
         turret.draw(game_window)
-    draw_text(str(world.health), text_font, 'blue', 0, 0)
-    draw_text(str(world.coins), text_font, 'blue', 0, 50)
 
+    display_data()
+    
+    
     # Draw Buttons
+    #for the "turret button" show cost of turret and draw the button 
+    draw_text(str(const.BUY_COST), text_font, 'blue', const.SCREEN_WIDTH + 215, 135)
+    game_window.blit(coin_image,(const.SCREEN_WIDTH + 260, 130))
     if turret_button.draw(game_window):
         placing_turrets = True
     if placing_turrets == True:
@@ -138,42 +179,94 @@ while game_active:
                 if world.coins >= const.UPGRADE_COST:
                     selected_turret.upgrade()
                     world.coins -= const.UPGRADE_COST
+    if game_over == False:
+        #check if player lost
+        if world.health  <= 0:
+            game_over = True
+            game_outcome = -1 #lost
+        #check if player has won 
+        if world.health > const.TOTAL_LEVEL:
+            game_over = True
+            game_outcome = 1 #win
 
-    # update group
-    enemy_group.update(world)
-    turret_group.update(enemy_group)
 
-    # higlight selected turret
-    if selected_turret:
-        selected_turret.selected = True
+        # update group
+        enemy_group.update(world)
+        turret_group.update(enemy_group, world)
 
-    # spawn enemies
-    if pygame.time.get_ticks() - last_enemy_spawn > const.SPAWN_COOLDOWN:
-        if world.spawned_enemies < len(world.enemy_list):
-            enemy_type = world.enemy_list[world.spawned_enemies]
-            enemy = Enemy(enemy_type, world.waypoints, enemy_images)
-            enemy_group.add(enemy)
-            world.spawned_enemies += 1
+        # higlight selected turret
+        if selected_turret:
+            selected_turret.selected = True
+    
+    if game_over == False:
+    #check if the level has started o not 
+        if level_started == False:
+            if begin_button.draw(game_window):
+                level_started = True
+        else:
+        # fast forward option
+            world.game_speed = 1
+            if fast_forward_button.draw(game_window):
+                world.game_speed = 2
+                
+        # spawn enemies
+            if pygame.time.get_ticks() - last_enemy_spawn > const.SPAWN_COOLDOWN:
+                if world.spawned_enemies < len(world.enemy_list):
+                    enemy_type = world.enemy_list[world.spawned_enemies]
+                    enemy = Enemy(enemy_type, world.waypoints, enemy_images)
+                    enemy_group.add(enemy)
+                    world.spawned_enemies += 1
+                    last_enemy_spawn = pygame.time.get_ticks()
+
+
+        #check if the wave is finished 
+        if world.check_level_complete() == True:
+            world.coins += const.LEVEL_COMPLETE_REWARD 
+            world.level += 1
+            level_started = False
             last_enemy_spawn = pygame.time.get_ticks()
+            world.reset_level()
+            world.process_enemies()
+            
+        # enemy path
+        pygame.draw.lines(game_window, 'Yellow', False, world.waypoints)
+    else: 
+        pygame.draw.rect(game_window, "skyblue", (200, 200, 400, 200), border_radius = 30  )
+        if game_outcome == -1:
+            draw_text("GAME OVER", large_font, "grey0", 310, 230)
+        elif game_outcome == 1:
+            draw_text("YOU WIN!", large_font, "grey0", 315, 230)
+            #restart level 
+        if restart_button.draw(game_window):
+            game_over = False
+            level_started = False
+            placing_turrets = False
+            selected_turret = None
+            last_enemy_spawn = pygame.time.get_ticks()
+            world = World(world_data, world_surf)
+            world.process_data()
+            world.process_enemies()
+            # empty group
+            enemy_group.empty()
+            turret_group.empty()
 
-    # enemy path
-    pygame.draw.lines(game_window, 'Yellow', False, world.waypoints)
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            game_active = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_active = False
 
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            mouse_pos = pygame.mouse.get_pos()
-            if mouse_pos[0] < const.SCREEN_WIDTH and mouse_pos[1] < const.SCREEN_HEIGHT:
-                selected_turret = None
-                clear_selection()
-                if placing_turrets == True:
-                    if world.coins >= const.BUY_COST:
-                        create_turret(mouse_pos)
-                else:
-                    selected_turret = select_turret(mouse_pos)
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse_pos = pygame.mouse.get_pos()
+                if mouse_pos[0] < const.SCREEN_WIDTH and mouse_pos[1] < const.SCREEN_HEIGHT:
+                    selected_turret = None
+                    clear_selection()
+                    if placing_turrets == True:
+                        if world.coins >= const.BUY_COST:
+                            create_turret(mouse_pos)
+                    else:
+                        selected_turret = select_turret(mouse_pos)
 
     pygame.display.flip()
 
 pygame.quit()
+    

@@ -6,6 +6,7 @@ class World():
     def __init__(self, data, image):
         pygame.sprite.Sprite.__init__(self)
         self.level = 1
+        self.game_speed = 1
         self.health = const.HEALTH
         self.coins = const.COINS
         self.tile_map = []
@@ -14,6 +15,8 @@ class World():
         self.image = image
         self.enemy_list = []
         self.spawned_enemies = 0
+        self.killed_enemies = 0 
+        self.missed_enemies = 0 
 
     def process_data(self):
         for layer in self.level_data["layers"]:
@@ -42,6 +45,15 @@ class World():
                 self.enemy_list.append(enemy_type)
         random.shuffle(self.enemy_list)
 
+    def check_level_complete(self): 
+        if (self.killed_enemies + self.missed_enemies) == len(self.enemy_list):
+            return True
     
+    def reset_level(self): 
+        self.enemy_list = []
+        self.spawned_enemies = 0
+        self.killed_enemies = 0 
+        self.missed_enemies = 0 
+
     def draw(self, surface):
         surface.blit(self.image, (0, 0))

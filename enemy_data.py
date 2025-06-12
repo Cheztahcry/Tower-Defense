@@ -1,7 +1,7 @@
 ENEMY_SPAWN_DATA = [
     {
         #1
-        'common': 15,
+        'common': 10,
         'uncommon': 0,
         'rare': 0,
         'epic': 0

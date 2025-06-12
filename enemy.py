@@ -25,11 +25,12 @@ class Enemy(pygame.sprite.Sprite):
         else:
             self.kill()
             world.health -= 1
-
+            world.missed_enemies += 1
+            
         #calculate distance to waypoint 
         distance = self.move.length()
-        if distance >= self.speed:
-            self.position += self.move.normalize() * self.speed
+        if distance >= (self.speed * world.game_speed):    
+            self.position += self.move.normalize() * (self.speed * world.game_speed) 
         else:
             if distance != 0:
                 self.position += self.move.normalize() * distance
@@ -50,6 +51,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def check_alive(self, world):
         if self.health <= 0:
+            world.killed_enemies += 1
             world.coins += const.KILL_REWARD
             self.kill()
 

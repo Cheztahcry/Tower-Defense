@@ -1,5 +1,6 @@
 import pygame
 import math
+import constants as const
 from pygame.math import Vector2
 from enemy_data import ENEMY_DATA
 class Enemy(pygame.sprite.Sprite):
@@ -16,13 +17,14 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = self.position
 
-    def movement(self):
+    def movement(self, world):
         #target waypoint
         if self.target_waypoint < len(self.waypoints):
             self.target = Vector2(self.waypoints[self.target_waypoint])
             self.move = self.target - self.position
         else:
             self.kill()
+            world.health -= 1
 
         #calculate distance to waypoint 
         distance = self.move.length()
@@ -46,10 +48,16 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = self.position
 
+    def check_alive(self, world):
+        if self.health <= 0:
+            world.coins += const.KILL_REWARD
+            self.kill()
+
 
  
 
-    def update(self):
+    def update(self, world):
         
-        self.movement()
+        self.movement(world)
         self.rotate()
+        self.check_alive(world)

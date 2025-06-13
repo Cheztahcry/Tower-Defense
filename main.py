@@ -40,7 +40,7 @@ buy_turret_image = pygame.image.load(
 cancel_turret_image = pygame.image.load(
     "assets/buttons/CANCEL.png").convert_alpha()
 upgrade_turret_image = pygame.image.load(
-    "assets/buttons/UPGRADE.png").convert_alpha()
+    "assets/buttons/upgrade_button.png").convert_alpha()
 begin_image = pygame.image.load(
     "assets/buttons/begin.png").convert_alpha()
 restart_image = pygame.image.load(
@@ -184,10 +184,12 @@ while game_active:
         if world.health  <= 0:
             game_over = True
             game_outcome = -1 #lost
-        #check if player has won 
-        if world.health > const.TOTAL_LEVEL:
+
+    #  Check win condition after finishing a level
+        if world.level > const.TOTAL_LEVEL:
             game_over = True
-            game_outcome = 1 #win
+            game_outcome = 1  # win
+
 
 
         # update group
@@ -231,7 +233,7 @@ while game_active:
         # enemy path
         pygame.draw.lines(game_window, 'Yellow', False, world.waypoints)
     else: 
-        pygame.draw.rect(game_window, "skyblue", (200, 200, 400, 200), border_radius = 30  )
+        pygame.draw.rect(game_window, "skyblue", (200, 200, 400, 200), border_radius = 30)
         if game_outcome == -1:
             draw_text("GAME OVER", large_font, "grey0", 310, 230)
         elif game_outcome == 1:
@@ -251,20 +253,20 @@ while game_active:
             turret_group.empty()
 
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game_active = False
+   #  at the bottom of the main loop 
+    for event in pygame.event.get():  
+        if event.type == pygame.QUIT:
+            game_active = False
 
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                mouse_pos = pygame.mouse.get_pos()
-                if mouse_pos[0] < const.SCREEN_WIDTH and mouse_pos[1] < const.SCREEN_HEIGHT:
-                    selected_turret = None
-                    clear_selection()
-                    if placing_turrets == True:
-                        if world.coins >= const.BUY_COST:
-                            create_turret(mouse_pos)
-                    else:
-                        selected_turret = select_turret(mouse_pos)
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            mouse_pos = pygame.mouse.get_pos()
+            if mouse_pos[0] < const.SCREEN_WIDTH and mouse_pos[1] < const.SCREEN_HEIGHT:
+                selected_turret = None
+                clear_selection()
+                if placing_turrets and world.coins >= const.BUY_COST:
+                    create_turret(mouse_pos)
+                else:
+                    selected_turret = select_turret(mouse_pos)
 
     pygame.display.flip()
 

@@ -158,11 +158,14 @@ while game_active:
     
     # Draw Buttons
     #for the "turret button" show cost of turret and draw the button 
-    draw_text(str(const.BUY_COST), text_font, 'blue', const.SCREEN_WIDTH + 215, 135)
-    game_window.blit(coin_image,(const.SCREEN_WIDTH + 260, 130))
+    #draw_text(str(const.BUY_COST), text_font, 'blue', const.SCREEN_WIDTH + 215, 135)
+    #game_window.blit(coin_image,(const.SCREEN_WIDTH + 260, 130))
+    
     if turret_button.draw(game_window):
         placing_turrets = True
     if placing_turrets == True:
+        draw_text(str(f'COST:{const.BUY_COST}'), text_font, '#228B22', const.SCREEN_WIDTH + 120, 40)
+        game_window.blit(coin_image,(const.SCREEN_WIDTH + 230, 40))
 
         cursor_rect = cursor_turret.get_rect()
         cursor_pos = pygame.mouse.get_pos()
@@ -173,7 +176,8 @@ while game_active:
             placing_turrets = False
     # if turret selected, show button
     if selected_turret:
-        # kung pwede pa, show mo button
+        draw_text(str(f'COST:{const.UPGRADE_COST}'), text_font, '#DAA06D', const.SCREEN_WIDTH + 120, 70)
+        game_window.blit(coin_image,(const.SCREEN_WIDTH + 230, 70))
         if selected_turret.upgrade_level < const.TURRET_LEVEL:
             if upgrade_button.draw(game_window):
                 if world.coins >= const.UPGRADE_COST:

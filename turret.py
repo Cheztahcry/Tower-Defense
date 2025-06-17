@@ -11,6 +11,7 @@ class Turret(pygame.sprite.Sprite):
         self.range = TURRET_DATA[self.upgrade_level - 1].get("range")
         self.damage = TURRET_DATA[self.upgrade_level - 1].get("damage")
         self.cooldown = TURRET_DATA[self.upgrade_level - 1].get("cooldown")
+        self.damage = TURRET_DATA[self.upgrade_level - 1].get("damage", const.TURRET_DAMAGE)
         self.last_shot = pygame.time.get_ticks()
         self.selected = False
         self.target = None
@@ -99,6 +100,7 @@ class Turret(pygame.sprite.Sprite):
         self.range = TURRET_DATA[self.upgrade_level - 1].get("range")
         self.damage = TURRET_DATA[self.upgrade_level - 1].get("damage")
         self.cooldown = TURRET_DATA[self.upgrade_level - 1].get("cooldown")
+        self.damage = TURRET_DATA[self.upgrade_level - 1].get("damage", self.damage)
         # update imgae
         self.animation_list = self.load_images(
             self.sprite_sheets[self.upgrade_level - 1])

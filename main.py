@@ -187,6 +187,7 @@ while game_active:
 
     #  Check win condition after finishing a level
         if world.level > const.TOTAL_LEVEL:
+            world.level -= 1
             game_over = True
             game_outcome = 1  # win
 

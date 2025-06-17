@@ -9,6 +9,7 @@ class Turret(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.upgrade_level = 1
         self.range = TURRET_DATA[self.upgrade_level - 1].get("range")
+        self.damage = TURRET_DATA[self.upgrade_level - 1].get("damage")
         self.cooldown = TURRET_DATA[self.upgrade_level - 1].get("cooldown")
         self.last_shot = pygame.time.get_ticks()
         self.selected = False
@@ -75,7 +76,7 @@ class Turret(pygame.sprite.Sprite):
                         self.target = enemy
                         self.angle = math.degrees(math.atan2(-y_dist, x_dist))
                         #damage enemy
-                        self.target.health -= const.TURRET_DAMAGE
+                        self.target.health -= self.damage
                         # play sound fx
                         self.shot_fx.play()
                         break
@@ -96,6 +97,7 @@ class Turret(pygame.sprite.Sprite):
     def upgrade(self):
         self.upgrade_level += 1
         self.range = TURRET_DATA[self.upgrade_level - 1].get("range")
+        self.damage = TURRET_DATA[self.upgrade_level - 1].get("damage")
         self.cooldown = TURRET_DATA[self.upgrade_level - 1].get("cooldown")
         # update imgae
         self.animation_list = self.load_images(

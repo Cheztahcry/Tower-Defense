@@ -213,7 +213,8 @@ while game_active:
         else:
         # fast forward option
             world.game_speed = 1
-            if fast_forward_button.draw(game_window):
+            keys = pygame.key.get_pressed()
+            if fast_forward_button.draw(game_window) or keys[pygame.K_SPACE]:
                 world.game_speed = 2
                 
         # spawn enemies

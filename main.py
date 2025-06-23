@@ -60,7 +60,7 @@ logo_image = pygame.image.load(
 shot_fx = pygame.mixer.Sound("assets/audio/shot.wav")
 shot_fx.set_volume(0.5)
 # json
-with open('levels/waypoints.tmj') as file:
+with open('levels/waypoint.tmj') as file:
     world_data = json.load(file)
 #display text
 text_font = pygame.font.SysFont("Consolas", 24, bold = True)
@@ -87,7 +87,7 @@ def create_turret(mouse_pos):
     mouse_tile_x = mouse_pos[0] // const.TILE_SIZE
     mouse_tile_y = mouse_pos[1] // const.TILE_SIZE
     mouse_tile_num = (mouse_tile_y * const.COLUMS) + mouse_tile_x
-    if world.tile_map[mouse_tile_num] == 121:
+    if world.tile_map[mouse_tile_num] == 1:
         space_is_free = True
         for turret in turret_group:
             if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
@@ -237,7 +237,8 @@ while game_active:
             world.process_enemies()
             
         # enemy path
-        pygame.draw.lines(game_window, 'Yellow', False, world.waypoints)
+        if len(world.waypoints) >= 2:
+            pygame.draw.lines(game_window, 'Yellow', False, world.waypoints)
     else: 
         pygame.draw.rect(game_window, "skyblue", (200, 200, 400, 200), border_radius = 30)
         if game_outcome == -1:

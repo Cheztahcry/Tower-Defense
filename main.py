@@ -8,6 +8,7 @@ from button import Button
 
 def start_game():
     pygame.init()
+    pygame.mixer.init()
 
 
     game_clock = pygame.time.Clock()
@@ -27,6 +28,20 @@ def start_game():
     placing_turrets = False
     selected_turret = None
     keys = pygame.key.get_pressed()
+
+    #Load Music
+    pygame.mixer.music.load("assets/audio/bg_music.mp3")
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play(-1)
+
+    #Sound fx
+    #Sound fx
+    plc_fx = pygame.mixer.Sound("assets/audio/place_fx.mp3")
+    plc_fx.set_volume(0.6)
+    upg_fx = pygame.mixer.Sound("assets/audio/upgrade_fx.mp3")
+    upg_fx.set_volume(0.6)
+    click_fx = pygame.mixer.Sound("assets/audio/click.mp3")
+    click_fx.set_volume(0.5)
     
 
     # Load Images
@@ -50,16 +65,16 @@ def start_game():
         "assets/buttons/begin.png").convert_alpha()
     restart_image = pygame.image.load(
         "assets/buttons/restart.png").convert_alpha()
+    restart_image = pygame.transform.scale(restart_image, (170, 40))
     fast_forward_image = pygame.image.load(
         "assets/buttons/fast_forward.png").convert_alpha()
 
     #gui
-    coin_image = pygame.image.load(
-        "assets/gui/coin.png").convert_alpha()
-    heart_image = pygame.image.load(
-        "assets/gui/heart.png").convert_alpha()
-    logo_image = pygame.image.load(
-        "assets/gui/logo.png").convert_alpha()
+    coin_image = pygame.image.load("assets/gui/coin.png").convert_alpha()
+    coin_image = pygame.transform.scale(coin_image, (24, 24))
+    heart_image = pygame.image.load("assets/gui/heart.png").convert_alpha()
+    side_panel_bg = pygame.image.load("assets/gui/side_panel.png").convert_alpha()
+    game_over_img = pygame.image.load("assets/gui/game_over.png").convert_alpha()
         
     #shot effects 
     shot_fx = pygame.mixer.Sound("assets/audio/shot.wav")
@@ -68,23 +83,26 @@ def start_game():
     with open('levels/waypoint.tmj') as file:
         world_data = json.load(file)
     #display text
-    text_font = pygame.font.SysFont("Consolas", 24, bold = True)
-    large_font = pygame.font.SysFont("Consolas", 40)
+    ps_font = "assets/fonts/press_start.ttf"
+    ka_font = "assets/fonts/ka1.ttf"
+
+    text_font = pygame.font.Font(ps_font, 14)
+    level_font = pygame.font.Font(ps_font, 28)
+    
 
     def draw_text(text, font, text_color, x, y):
-        img = font.render(text, True, text_color)
+        img = font.render(text, False, text_color)
         game_window.blit(img, (x, y)) 
 
     def display_data():
-        pygame.draw.rect(game_window, "yellow", (const.SCREEN_WIDTH, 0,const.SIDE_PANEL, const.SCREEN_HEIGHT))
-        pygame.draw.rect(game_window, "grey", (const.SCREEN_WIDTH, 0, const.SIDE_PANEL, 400), 2)
-        game_window.blit(logo_image, (const.SCREEN_WIDTH, 400))
+
+        game_window.blit(side_panel_bg, (const.SCREEN_WIDTH, 0))
         #display data 
-        draw_text("LEVEL: " + str(world.level), text_font, 'blue', const.SCREEN_WIDTH + 10, 10)
-        game_window.blit(heart_image, (const.SCREEN_WIDTH + 10, 35 ))
-        draw_text(str(world.health), text_font, 'blue', const.SCREEN_WIDTH + 50, 40)
-        game_window.blit(coin_image,(const.SCREEN_WIDTH +10, 65))
-        draw_text(str(world.coins), text_font, 'blue',const.SCREEN_WIDTH + 50, 70)
+        draw_text("LEVEL: " + str(world.level), level_font, 'white', const.SCREEN_WIDTH + 41, 55)
+        game_window.blit(heart_image, (const.SCREEN_WIDTH + 32, 127))
+        draw_text(str(world.health), text_font, 'white', const.SCREEN_WIDTH + 72, 137)
+        game_window.blit(coin_image,(const.SCREEN_WIDTH + 36, 160))
+        draw_text(str(world.coins), text_font, 'white',const.SCREEN_WIDTH + 72, 165)
     
 
 
@@ -99,6 +117,7 @@ def start_game():
                     space_is_free = False
 
             if space_is_free == True:
+                plc_fx.play()
                 new_turret = Turret(turret_spritesheets,
                                     mouse_tile_x, mouse_tile_y, shot_fx)
                 turret_group.add(new_turret)
@@ -137,15 +156,15 @@ def start_game():
     print(world.waypoints)
 
     # button
-    turret_button = Button(const.SCREEN_WIDTH + 50, 120, buy_turret_image, True)
-    cancel_button = Button(const.SCREEN_WIDTH + 50, 180, cancel_turret_image, True)
-    upgrade_button = Button(const.SCREEN_WIDTH + 50, 180,
+    turret_button = Button(const.SCREEN_WIDTH + 57, 260, buy_turret_image, True)
+    cancel_button = Button(const.SCREEN_WIDTH + 57, 320, cancel_turret_image, True)
+    upgrade_button = Button(const.SCREEN_WIDTH + 57, 320,
                             upgrade_turret_image, True)
-    begin_button = Button(const.SCREEN_WIDTH + 50, 300,
+    begin_button = Button(const.SCREEN_WIDTH + 57, 420,
                             begin_image, True)
-    restart_button = Button(310, 300,
+    restart_button = Button(315, 310,
                             restart_image, True)
-    fast_forward_button = Button(const.SCREEN_WIDTH + 50, 300,
+    fast_forward_button = Button(const.SCREEN_WIDTH + 57, 420,
                             fast_forward_image, False)
 
 
@@ -167,10 +186,11 @@ def start_game():
         #game_window.blit(coin_image,(const.SCREEN_WIDTH + 260, 130))
         
         if turret_button.draw(game_window):
+            click_fx.play()
             placing_turrets = True
         if placing_turrets == True:
-            draw_text(str(f'COST:{const.BUY_COST}'), text_font, '#228B22', const.SCREEN_WIDTH + 120, 40)
-            game_window.blit(coin_image,(const.SCREEN_WIDTH + 230, 40))
+            draw_text(str(f'COST:{const.BUY_COST}'), text_font, "#FFFFFF", const.SCREEN_WIDTH + 87, 232)
+            game_window.blit(coin_image,(const.SCREEN_WIDTH + 202, 228))
 
             cursor_rect = cursor_turret.get_rect()
             cursor_pos = pygame.mouse.get_pos()
@@ -178,16 +198,19 @@ def start_game():
             if cursor_pos[0] <= const.SCREEN_WIDTH:
                 game_window.blit(cursor_turret, cursor_rect)
             if cancel_button.draw(game_window):
+                click_fx.play()
                 placing_turrets = False
         # if turret selected, show button
         if selected_turret:
-            draw_text(str(f'COST:{const.UPGRADE_COST:}'), text_font, '#DAA06D', const.SCREEN_WIDTH + 120, 70)
-            game_window.blit(coin_image,(const.SCREEN_WIDTH + 230, 70))
+            draw_text(str(f'COST:{const.UPGRADE_COST:}'), text_font, "#FFFFFF", const.SCREEN_WIDTH + 87, 378)
+            game_window.blit(coin_image,(const.SCREEN_WIDTH + 202, 375))
             if selected_turret.upgrade_level < const.TURRET_LEVEL:
                 if upgrade_button.draw(game_window):
+                    click_fx.play()
                     if world.coins >= const.UPGRADE_COST:
                         selected_turret.upgrade()
                         world.coins -= const.UPGRADE_COST
+                        upg_fx.play()
         if game_over == False:
             #check if player lost
             if world.health  <= 0:
@@ -214,6 +237,7 @@ def start_game():
         #check if the level has started o not 
             if level_started == False:
                 if begin_button.draw(game_window):
+                    click_fx.play()
                     level_started = True
             else:
             # fast forward option
@@ -244,13 +268,10 @@ def start_game():
             if len(world.waypoints) >= 2:
                 pygame.draw.lines(game_window, 'Yellow', False, world.waypoints)
         else: 
-            pygame.draw.rect(game_window, "skyblue", (200, 200, 400, 200), border_radius = 30)
-            if game_outcome == -1:
-                draw_text("GAME OVER", large_font, "grey0", 310, 230)
-            elif game_outcome == 1:
-                draw_text("YOU WIN!", large_font, "grey0", 315, 230)
+            game_window.blit(game_over_img, (200, 200))
                 #restart level 
             if restart_button.draw(game_window):
+                click_fx.play()
                 game_over = False
                 level_started = False
                 placing_turrets = False

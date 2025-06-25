@@ -4,6 +4,7 @@ import sys
 import main
 
 pygame.init()
+pygame.mixer.init()
 
 SCREEN_HEIGHT = 720
 SCREEN_WIDTH = 1020
@@ -12,6 +13,10 @@ pygame.display.set_caption("Chester-Defense")
 clock = pygame.time.Clock()
 icn = pygame.image.load("assets/bg_image/turret_icon.png").convert_alpha()
 pygame.display.set_icon(icn)
+
+pygame.mixer.music.load("assets/audio/load_music.mp3")
+pygame.mixer.music.set_volume(0.3)
+pygame.mixer.music.play(-1)
 
 play_btn_img = pygame.image.load("assets/bg_image/play button.png").convert_alpha()
 resized_image = pygame.transform.scale(play_btn_img, (100, 75))

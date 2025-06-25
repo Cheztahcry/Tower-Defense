@@ -42,7 +42,8 @@ def start_game():
     upg_fx.set_volume(0.6)
     click_fx = pygame.mixer.Sound("assets/audio/click.mp3")
     click_fx.set_volume(0.5)
-    
+    gm_ovr_fx = pygame.mixer.Sound("assets/audio/game_over_fx.mp3")
+    gm_ovr_fx.set_volume(0.5)
 
     # Load Images
     # turret
@@ -216,6 +217,7 @@ def start_game():
             if world.health  <= 0:
                 game_over = True
                 game_outcome = -1 #lost
+                gm_ovr_fx.play()
 
         #  Check win condition after finishing a level
             if world.level > const.TOTAL_LEVEL:

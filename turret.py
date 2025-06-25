@@ -18,8 +18,8 @@ class Turret(pygame.sprite.Sprite):
         self.tile_x = tile_x
         self.tile_y = tile_y
 
-        self.x = (self.tile_x + 0.5) * const.TILE_SIZE
-        self.y = (self.tile_y + 0.5) * const.TILE_SIZE
+        self.x = (self.tile_x + 0.5)  * const.TILE_SIZE
+        self.y = (self.tile_y + 0.5)  * const.TILE_SIZE
 
         #shot fx
         self.shot_fx = shot_fx

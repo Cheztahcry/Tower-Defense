@@ -52,46 +52,46 @@ ENEMY_SPAWN_DATA = [
 
      {
         #6
-        'common': 0,
-        'uncommon': 0,
-        'rare': 0,
+        'common': 5,
+        'uncommon': 5,
+        'rare': 1,
         'epic': 0
         
     },
 
      {
         #7
-        'common': 0,
-        'uncommon': 0,
-        'rare': 0,
-        'epic': 1
+        'common': 5,
+        'uncommon': 5,
+        'rare': 3,
+        'epic': 0
         
     },
 
      {
         #8
-        'common': 0,
-        'uncommon': 0,
-        'rare': 0,
-        'epic': 1
+        'common': 5,
+        'uncommon': 5,
+        'rare': 5,
+        'epic': 0
         
     },
 
      {
         #9
-        'common': 0,
-        'uncommon': 0,
-        'rare': 0,
+        'common': 5,
+        'uncommon': 5,
+        'rare': 5,
         'epic': 1
         
     },
 
      {
         #10
-        'common': 0,
-        'uncommon': 0,
-        'rare': 0,
-        'epic': 1
+        'common': 5,
+        'uncommon': 3,
+        'rare': 3,
+        'epic': 5
         
 
     },

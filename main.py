@@ -17,7 +17,7 @@ def start_game():
     game_active = True
     last_enemy_spawn = pygame.time.get_ticks()
 
-    icn = pygame.image.load("bg_image/turret_icon.png").convert_alpha()
+    icn = pygame.image.load("assets/bg_image/turret_icon.png").convert_alpha()
     pygame.display.set_icon(icn)
 
     # Variables
@@ -26,6 +26,7 @@ def start_game():
     level_started = False
     placing_turrets = False
     selected_turret = None
+    turret = Turret()
 
     # Load Images
     # turret
@@ -179,7 +180,7 @@ def start_game():
                 placing_turrets = False
         # if turret selected, show button
         if selected_turret:
-            draw_text(str(f'COST:{const.UPGRADE_COST}'), text_font, '#DAA06D', const.SCREEN_WIDTH + 120, 70)
+            draw_text(str(f'COST:{const.UPGRADE_COST:}'), text_font, '#DAA06D', const.SCREEN_WIDTH + 120, 70)
             game_window.blit(coin_image,(const.SCREEN_WIDTH + 230, 70))
             if selected_turret.upgrade_level < const.TURRET_LEVEL:
                 if upgrade_button.draw(game_window):
@@ -231,7 +232,7 @@ def start_game():
 
             #check if the wave is finished 
             if world.check_level_complete() == True:
-                world.coins += const.LEVEL_COMPLETE_REWARD 
+                #world.coins += const.LEVEL_COMPLETE_REWARD 
                 world.level += 1
                 level_started = False
                 last_enemy_spawn = pygame.time.get_ticks()

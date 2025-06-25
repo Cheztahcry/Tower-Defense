@@ -11,6 +11,7 @@ class Enemy(pygame.sprite.Sprite):
         self.target_waypoint = 1
         self.health = ENEMY_DATA.get(enemy_type)['health']
         self.speed = ENEMY_DATA.get(enemy_type)['speed']
+        self.reward = ENEMY_DATA.get(enemy_type)['reward']
         self.angle = 0
         self.orig_image = images.get(enemy_type)
         self.image = pygame.transform.rotate(self.orig_image, self.angle)
@@ -52,7 +53,7 @@ class Enemy(pygame.sprite.Sprite):
     def check_alive(self, world):
         if self.health <= 0:
             world.killed_enemies += 1
-            world.coins += const.KILL_REWARD
+            world.coins += self.reward
             self.kill()
 
 

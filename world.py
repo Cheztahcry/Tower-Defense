@@ -1,7 +1,7 @@
 import pygame
 import random
 import constants as const
-from enemy_data import ENEMY_SPAWN_DATA
+from enemy_data import *
 class World():
     def __init__(self, data, image):
         pygame.sprite.Sprite.__init__(self)
@@ -16,7 +16,8 @@ class World():
         self.enemy_list = []
         self.spawned_enemies = 0
         self.killed_enemies = 0 
-        self.missed_enemies = 0 
+        self.missed_enemies = 0
+        
 
     def process_data(self):
         for layer in self.level_data["layers"]:

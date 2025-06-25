@@ -10,15 +10,15 @@ SCREEN_WIDTH = 1020
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Chester-Defense")
 clock = pygame.time.Clock()
-icn = pygame.image.load("bg_image/turret_icon.png").convert_alpha()
+icn = pygame.image.load("assets/bg_image/turret_icon.png").convert_alpha()
 pygame.display.set_icon(icn)
 
-play_btn_img = pygame.image.load("bg_image/play button.png").convert_alpha()
+play_btn_img = pygame.image.load("assets/bg_image/play button.png").convert_alpha()
 resized_image = pygame.transform.scale(play_btn_img, (100, 75))
 play_button_rect = resized_image.get_rect(bottomright=(1010, 725))
 play_button_trans = 0
 
-slime_ss = pygame.image.load("bg_image/slime.png").convert_alpha()
+slime_ss = pygame.image.load("assets/bg_image/slime.png").convert_alpha()
 frame_width = slime_ss.get_width() // 4
 frame_height = slime_ss.get_height()
 
@@ -33,7 +33,7 @@ frame_index = 0
 frame_timer = 0
 frame_speed = 0.1
 
-bg = pygame.image.load("bg_image/CHESTER_DF.png").convert()
+bg = pygame.image.load("assets/bg_image/CHESTER_DF.png").convert()
 bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 font = pygame.font.SysFont("Arial", 17)

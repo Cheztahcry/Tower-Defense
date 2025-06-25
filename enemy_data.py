@@ -99,18 +99,22 @@ ENEMY_SPAWN_DATA = [
 ENEMY_DATA = {
     'common': {
         'health': 10,
-        'speed': 2
+        'speed': 2,
+        'reward': 25
     },
     'uncommon': {
         'health': 15,
-        'speed': 4
+        'speed': 4,
+        'reward': 50
     },
     'rare': {
         'health': 25,
-        'speed': 6
+        'speed': 6,
+        'reward': 75
     },
     'epic': {
         'health': 40,
-        'speed': 8
+        'speed': 8,
+        'reward': 100
     }
 }

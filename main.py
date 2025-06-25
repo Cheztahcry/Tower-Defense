@@ -26,7 +26,8 @@ def start_game():
     level_started = False
     placing_turrets = False
     selected_turret = None
-    turret = Turret()
+    keys = pygame.key.get_pressed()
+    
 
     # Load Images
     # turret
@@ -217,7 +218,7 @@ def start_game():
             else:
             # fast forward option
                 world.game_speed = 1
-                if fast_forward_button.draw(game_window):
+                if fast_forward_button.draw(game_window) or keys[pygame.K_SPACE]:
                     world.game_speed = 2
                     
             # spawn enemies

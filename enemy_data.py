@@ -1,7 +1,7 @@
 ENEMY_SPAWN_DATA = [
     {
         #1
-        'common': 1,
+        'common': 5,
         'uncommon': 0,
         'rare': 0,
         'epic': 0
@@ -12,8 +12,8 @@ ENEMY_SPAWN_DATA = [
 
     {
         #2
-        'common': 5,
-        'uncommon': 10,
+        'common': 10,
+        'uncommon': 1,
         'rare': 0,
         'epic': 0
         
@@ -23,9 +23,9 @@ ENEMY_SPAWN_DATA = [
 
     {
         #3
-        'common': 5,
-        'uncommon': 5,
-        'rare': 10,
+        'common': 15,
+        'uncommon': 3,
+        'rare': 0,
         'epic': 0
         
 
@@ -34,64 +34,75 @@ ENEMY_SPAWN_DATA = [
 
     {
         #4
-        'common': 0,
+        'common': 15,
         'uncommon': 5,
-        'rare': 10,
-        'epic': 5
+        'rare': 0,
+        'epic': 1
         
     },
 
      {
         #5
-        'common': 0,
-        'uncommon': 5,
-        'rare': 10,
-        'epic': 5
+        'common': 10,
+        'uncommon': 7,
+        'rare': 0,
+        'epic': 0
         
     },
 
      {
         #6
         'common': 0,
-        'uncommon': 5,
-        'rare': 10,
-        'epic': 5
+        'uncommon': 0,
+        'rare': 0,
+        'epic': 0
         
     },
 
      {
         #7
         'common': 0,
-        'uncommon': 5,
-        'rare': 10,
-        'epic': 5
+        'uncommon': 0,
+        'rare': 0,
+        'epic': 1
         
     },
 
      {
         #8
         'common': 0,
-        'uncommon': 5,
-        'rare': 10,
-        'epic': 5
+        'uncommon': 0,
+        'rare': 0,
+        'epic': 1
         
     },
 
      {
         #9
         'common': 0,
-        'uncommon': 5,
-        'rare': 10,
-        'epic': 5
+        'uncommon': 0,
+        'rare': 0,
+        'epic': 1
         
     },
 
      {
         #10
         'common': 0,
-        'uncommon': 5,
-        'rare': 10,
-        'epic': 5
+        'uncommon': 0,
+        'rare': 0,
+        'epic': 1
+        
+
+    },
+
+     {
+        #Dont remove this, add extra if you increase the total level in constants
+        'common': 0,
+        'uncommon': 0,
+        'rare': 0,
+        'epic': 0
+        
         
     }
 ]

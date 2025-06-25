@@ -101,6 +101,7 @@ class Turret(pygame.sprite.Sprite):
         self.damage = TURRET_DATA[self.upgrade_level - 1].get("damage")
         self.cooldown = TURRET_DATA[self.upgrade_level - 1].get("cooldown")
         self.upgrade_cost = TURRET_DATA[self.upgrade_level - 1].get("upgrade_cost")
+        
 
         # update imgae
         self.animation_list = self.load_images(

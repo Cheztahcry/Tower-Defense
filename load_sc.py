@@ -9,7 +9,7 @@ pygame.mixer.init()
 SCREEN_HEIGHT = 720
 SCREEN_WIDTH = 1020
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Chester-Defense")
+pygame.display.set_caption("LockDown-Defense")
 clock = pygame.time.Clock()
 icn = pygame.image.load("assets/bg_image/turret_icon.png").convert_alpha()
 pygame.display.set_icon(icn)
@@ -38,7 +38,7 @@ frame_index = 0
 frame_timer = 0
 frame_speed = 0.1
 
-bg = pygame.image.load("assets/bg_image/CHESTER_DF.png").convert()
+bg = pygame.image.load("assets/bg_image/CHESTER_DF.jpg").convert()
 bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 font = pygame.font.SysFont("Arial", 17)

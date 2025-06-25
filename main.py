@@ -12,7 +12,7 @@ def start_game():
 
 
     game_clock = pygame.time.Clock()
-    pygame.display.set_caption("Chester-Defense")
+    pygame.display.set_caption("LockDown-Defense")
     game_window = pygame.display.set_mode(
         (const.SCREEN_WIDTH + const.SIDE_PANEL, const.SCREEN_HEIGHT))
     game_active = True

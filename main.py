@@ -27,7 +27,6 @@ def start_game():
     level_started = False
     placing_turrets = False
     selected_turret = None
-    keys = pygame.key.get_pressed()
 
     #Load Music
     pygame.mixer.music.load("assets/audio/bg_music.mp3")
@@ -88,7 +87,7 @@ def start_game():
     ka_font = "assets/fonts/ka1.ttf"
 
     text_font = pygame.font.Font(ps_font, 14)
-    level_font = pygame.font.Font(ps_font, 28)
+    level_font = pygame.font.Font(ps_font, 25)
     
 
     def draw_text(text, font, text_color, x, y):
@@ -99,13 +98,12 @@ def start_game():
 
         game_window.blit(side_panel_bg, (const.SCREEN_WIDTH, 0))
         #display data 
-        draw_text("LEVEL: " + str(world.level), level_font, 'white', const.SCREEN_WIDTH + 41, 55)
+        draw_text("LEVEL: " + str(world.level), level_font, 'white', const.SCREEN_WIDTH + 43, 55)
         game_window.blit(heart_image, (const.SCREEN_WIDTH + 32, 127))
         draw_text(str(world.health), text_font, 'white', const.SCREEN_WIDTH + 72, 137)
         game_window.blit(coin_image,(const.SCREEN_WIDTH + 36, 160))
         draw_text(str(world.coins), text_font, 'white',const.SCREEN_WIDTH + 72, 165)
     
-
 
     def create_turret(mouse_pos):
         mouse_tile_x = mouse_pos[0] // const.TILE_SIZE
@@ -131,6 +129,11 @@ def start_game():
         for turret in turret_group:
             if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
                 return turret
+    
+    def is_button_held(button_rect):
+        mouse_pressed = pygame.mouse.get_pressed()
+        mouse_pos = pygame.mouse.get_pos()
+        return button_rect.collidepoint(mouse_pos) and mouse_pressed[0]
 
 
     def clear_selection():
@@ -172,6 +175,8 @@ def start_game():
     while game_active:
         game_clock.tick(const.FPS)
         world.draw(game_window)
+
+        keys = pygame.key.get_pressed()
 
         # Draw
         enemy_group.draw(game_window)
@@ -246,6 +251,7 @@ def start_game():
                 world.game_speed = 1
                 if fast_forward_button.draw(game_window) or keys[pygame.K_SPACE]:
                     world.game_speed = 2
+                    
                     
             # spawn enemies
                 if pygame.time.get_ticks() - last_enemy_spawn > const.SPAWN_COOLDOWN:

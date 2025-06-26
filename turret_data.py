@@ -22,7 +22,7 @@ TURRET_DATA = [
     },
     {
         # 4
-        "range": 999,
+        "range": 280,
         "cooldown": 900,
         "damage": 30,
         "upgrade_cost": 1000

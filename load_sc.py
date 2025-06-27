@@ -9,7 +9,7 @@ pygame.mixer.init()
 SCREEN_HEIGHT = 720
 SCREEN_WIDTH = 1020
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("LockDown-Defense")
+pygame.display.set_caption("Lockdown Defense")
 clock = pygame.time.Clock()
 icn = pygame.image.load("assets/bg_image/turret_icon.png").convert_alpha()
 pygame.display.set_icon(icn)

@@ -273,8 +273,8 @@ def start_game():
                 world.process_enemies()
                 
             # enemy path
-            if len(world.waypoints) >= 2:
-                pygame.draw.lines(game_window, 'Yellow', False, world.waypoints)
+           # if len(world.waypoints) >= 2:
+               # pygame.draw.lines(game_window, 'Yellow', False, world.waypoints)
         else: 
             game_window.blit(game_over_img, (200, 200))
                 #restart level 
